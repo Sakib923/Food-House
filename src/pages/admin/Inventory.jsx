@@ -8,6 +8,7 @@ export default function Inventory() {
     const [purchaseDate, setPurchaseDate] = useState(new Date().toISOString().split('T')[0]);
     const [supplier, setSupplier] = useState("");
     const [items, setItems] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
         fetchItems();
@@ -56,6 +57,17 @@ export default function Inventory() {
             console.error("Error adding item:", error);
         }
     };
+
+    const handleUpdateItem = async (item) => {
+        console.log("item: ", item);
+
+    }
+
+    const handleEditAction = (item) => {
+        setIsModalOpen(true);
+        handleUpdateItem(item);
+
+    }
 
     return (
         <div className="min-h-screen flex flex-col">
@@ -202,6 +214,9 @@ export default function Inventory() {
                                         <th className="px-4 py-2 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                             Supplier
                                         </th>
+                                        <th className="px-4 py-2 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                            Actions
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -222,6 +237,11 @@ export default function Inventory() {
                                             <td className="px-4 py-2 border-b border-gray-200">
                                                 {item.supplier}
                                             </td>
+                                            <td>
+                                                <button onClick={(item) => {handleEditAction(item)}} className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2">
+                                                    Edit
+                                                </button>
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -230,6 +250,115 @@ export default function Inventory() {
                     </div>
                 </div>
             </div>
+            {isModalOpen && (
+                <div className="fixed z-10 inset-0 overflow-y-auto">
+                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+                            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+                        </div>
+                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                <div className="sm:flex sm:items-start">
+                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                                            Edit Inventory Item
+                                        </h3>
+                                        <div className="mt-2">
+                                            <label
+                                                htmlFor="edit-name"
+                                                className="block text-sm font-medium leading-5 text-gray-700"
+                                            >
+                                                Item Name
+                                            </label>
+                                            <input
+                                                id="edit-name"
+                                                name="edit-name"
+                                                type="text"
+                                                // value={selectedEmployee.name}
+                                                // onChange={(e) => setSelectedEmployee({ ...selectedEmployee, name: e.target.value })}
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            />
+                                            <label
+                                                htmlFor="edit-email"
+                                                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+                                            >
+                                                Email
+                                            </label>
+                                            <input
+                                                id="edit-email"
+                                                name="edit-email"
+                                                type="email"
+                                                // value={selectedEmployee.email}
+                                                // onChange={(e) => setSelectedEmployee({ ...selectedEmployee, email: e.target.value })}
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            />
+                                            <label
+                                                htmlFor="edit-position"
+                                                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+                                            >
+                                                Position
+                                            </label>
+                                            <input
+                                                id="edit-position"
+                                                name="edit-position"
+                                                type="text"
+                                                // value={selectedEmployee.position}
+                                                // onChange={(e) => setSelectedEmployee({ ...selectedEmployee, position: e.target.value })}
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            />
+                                            <label
+                                                htmlFor="edit-salary"
+                                                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+                                            >
+                                                Salary
+                                            </label>
+                                            <input
+                                                id="edit-salary"
+                                                name="edit-salary"
+                                                type="number"
+                                                // value={selectedEmployee.salary}
+                                                // onChange={(e) => setSelectedEmployee({ ...selectedEmployee, salary: e.target.value })}
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            />
+                                            {/* <label
+                                                htmlFor="edit-phoneNo"
+                                                className="block text-sm font-medium leading-5 text-gray-700 mt-4"
+                                            >
+                                                Phone Number
+                                            </label>
+                                            <input
+                                                id="edit-phoneNo"
+                                                name="edit-phoneNo"
+                                                type="text"
+                                                value={selectedEmployee.phoneNo}
+                                                onChange={(e) => setSelectedEmployee({ ...selectedEmployee, phoneNo: e.target.value })}
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                            /> */}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                <button
+                                    type="button"
+                                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                    // onClick={handleUpdateEmployee}
+                                >
+                                    Save
+                                </button>
+                                <button
+                                    type="button"
+                                    className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:w-auto sm:text-sm"
+                                    onClick={() => setIsModalOpen(false)}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
