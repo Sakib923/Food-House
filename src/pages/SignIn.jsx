@@ -1,10 +1,15 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, useContext} from "react";
 import { useNavigate, NavLink } from "react-router";
+import { UserData } from "../context/UserData";
 import loginpage from "../assets/loginPageImage/loginpage.webp";
 
 
 
 export default function SignIn() {
+
+
+    const userData = useContext(UserData);
+    const {user, setUser} = userData;
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -30,11 +35,14 @@ export default function SignIn() {
             const data = await response.json();
 
             // for debugging
-            ("data: "+ data);
+            console.log("data: "+ data);
+            console.log(data);
             // -----><-----
 
             if (data.success) {
                 setWorngCredentials(false);
+                setUser(prevUser => ({ ...prevUser, email: data.email, isAuthenticated: true, id: data.id, name: data.name, password: data.password }));
+
                 navigate("/home", {state: {email}});
                 ("Sign In Successful");
             } else {

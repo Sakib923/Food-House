@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
 
-export default function NavbarTest({page, email}) {
+export default function NavbarTest({page}) {
 
     const baseClasses = "block py-2 px-3 rounded md:p-0 dark:text-white";
     const onHoverClasses = 'bg-[#4662a0]'
@@ -14,13 +14,6 @@ export default function NavbarTest({page, email}) {
                     href="https://flowbite.com/"
                     className="flex items-center space-x-3 rtl:space-x-reverse"
                 >
-                    {/* <img
-                        src="https://flowbite.com/docs/images/logo.svg"
-                        className="h-8"
-                        alt="Flowbite Logo"
-                    /> */
-                    ("in Navbar:", email)
-                    }
                     <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
                         Food House
                     </span>

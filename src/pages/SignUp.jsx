@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { NavLink, useNavigate } from "react-router";
-// import signUpImage from '..assets/signUpPageImage/signUp.jpg';
-// import signUpImage from '../assets/signUpPageImage/signUp.jpg';
+import { UserData } from "../context/UserData.jsx";
 
 export default function SignUp() {
     const [firstName, setFirstName] = useState("");
@@ -12,7 +11,11 @@ export default function SignUp() {
     const [userExist, setUserExist] = useState(false);
     const navigate = useNavigate();
 
+    const userData = useContext(UserData);
+        const { user, setUser } = userData;
+
     const handleRegistration = async (e) => {
+        const name = firstName + " " + lastName;
         e.preventDefault();
         if (
             firstName === "" ||
@@ -43,189 +46,190 @@ export default function SignUp() {
             setC_Password(null);
             setPassword(null);
         } else if (password === c_password) {
-            ("Registration Successful");
+            console.log("Registration Successful");
             try {
-                const obj = {method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ firstName, lastName, email, password })};
-                (obj)
                 const response = await fetch('http://localhost:5000/users', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ firstName, lastName, email, password }),
-                  
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password }),
                 });
-                ("response: "+ response.body);
+                console.log("response: " + response.body);
                 const data = await response.json();
-                ("data: "+ data);
+                console.log("data: " + data);
                 if (data.success) {
                     setUserExist(false);
+                    setUser(prevUser => ({ ...prevUser, email: data.email, isAuthenticated: true, id: data.id, name: data.name, password: data.password }));
+                    console.log(user);
                     navigate("/home");
-                    ("Registration Successful");
+                    console.log("Registration Successful");
                 } else {
                     setUserExist(true);
                 }
             } catch (error) {
-                ('Error:', error);
-            }    
+                console.error('Error:', error);
+            }
         }
     };
 
-   
-
     return (
-        <>
-            {/* source: https://gist.github.com/nraloux/bce10c4148380061781b928cdab9b193 */}
-            {/* I have added support for dark mode and improved UI */}
-            <div className="min-h-screen bg-gray-100 text-gray-900 flex justify-center">
-                <div className="max-w-screen-xl m-0 sm:m-10 bg-white shadow sm:rounded-lg flex justify-center flex-1">
-                    <div className="flex-1  text-center hidden lg:flex rounded-l-lg">
-                        <div className="w-full bg-contain bg-center bg-no-repeat m-auto">
-                            <img
-                                className="mx-auto max-h-[550px] object-contain rounded-t-lg "
-                                
-                                alt="Sign up Illustration"
-                            />
-                        </div>
+        <div className="min-h-screen flex">
+            <div className="flex-1 flex flex-col bg-[#32231a]">
+                <div className="flex-grow flex justify-center items-center">
+                    <p className="text-white mt-6 text-center text-3xl leading-9 font-extrabold">Food House</p>
+                </div>
+                <div className="relative">
+                    <img
+                        src="https://via.placeholder.com/600x400" // Replace with your image path
+                        className="absolute bottom-0 w-full object-cover"
+                        alt="Sign Up"
+                    />
+                </div>
+            </div>
+            <div className="flex-1 bg-[#B1A794]">
+                <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+                    <div className="sm:mx-auto sm:w-full sm:max-w-md">
+                        <img
+                            className="mx-auto h-10 w-auto"
+                            src="https://www.svgrepo.com/show/301692/login.svg"
+                            alt="Workflow"
+                        />
+                        <h2 className="mt-6 text-center text-3xl leading-9 font-extrabold text-gray-900">
+                            Sign Up
+                        </h2>
                     </div>
-                    <div className="lg:w-1/2 xl:w-5/12 p-6 sm:p-12 py-auto">
-                        <div className="flex justify-between m-auto mt-5 pb-10">
-                            {/* <img
-                                src="https://img.icons8.com/cotton/64/note--v2.png"
-                                className="w-16 ml-auto mr-2"
-                            /> */}
-                            <h1 className="mr-auto my-auto text-3xl font-extrabold">
-                                <span className="text-[#b5a809]"> Food</span>{" "}
-                                House
-                            </h1>
-                        </div>
-                        <div className="m-auto mb-4 text-center">
-                            <h2 className="text-indigo-500 mx-auto text-2xl xl:text-3xl font-extrabold pb-2">
-                                Sign Up
-                            </h2>
-                        </div>
-                        <form>
-                            <div className="mb-4 md:flex md:justify-between">
-                                <div className="mb-4 md:mr-2 md:mb-0">
-                                    {/*User First Name*/}
-                                    <input
-                                        id="firstName"
-                                        type="text"
-                                        placeholder="First Name"
-                                        className={`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border  placeholder-gray-500 text-sm focus:outline-none ${
-                                            firstName !== null
-                                                ? "border-gray-200 focus:border-indigo-600 focus:shadow-xl focus:shadow-indigo-500/10"
-                                                : "border-red-600 focus:shadow-xl shadow-red-500/10"
-                                        } focus:bg-white`}
-                                        onChange={(e) => {
-                                            setFirstName(e.target.value);
-                                        }}
-                                        value={firstName}
-                                    />
+                    <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+                        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                            <form method="POST" action="#">
+                                <div className="mt-6">
+                                    <label
+                                        htmlFor="firstName"
+                                        className="block text-sm font-medium leading-5 text-gray-700"
+                                    >
+                                        First Name
+                                    </label>
+                                    <div className="mt-1 relative rounded-md shadow-sm">
+                                        <input
+                                            id="firstName"
+                                            name="firstName"
+                                            placeholder="First Name"
+                                            type="text"
+                                            value={firstName}
+                                            onChange={(e) => setFirstName(e.target.value)}
+                                            required=""
+                                            className={`appearance-none block w-full px-3 py-2 border ${firstName !== null ? 'border-gray-300' : 'border-red-600'} rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
+                                        />
+                                    </div>
                                 </div>
-                                <div className="md:ml-2">
-                                    {/*User Last Name*/}
-                                    <input
-                                        id="lastName"
-                                        type="text"
-                                        placeholder="Last Name"
-                                        className={`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border  placeholder-gray-500 text-sm focus:outline-none 
-                                            ${ lastName !== null
-                                                ? "border-gray-200 focus:border-indigo-600 focus:shadow-xl focus:shadow-indigo-500/10"
-                                                : "border-red-600 focus:shadow-xl shadow-red-500/10"
-                                            } focus:bg-white`
-                                        }
-                                        onChange={(e) => {
-                                            setLastName(e.target.value);
-                                        }}
-                                        value={lastName}
-                                    />
+                                <div className="mt-6">
+                                    <label
+                                        htmlFor="lastName"
+                                        className="block text-sm font-medium leading-5 text-gray-700"
+                                    >
+                                        Last Name
+                                    </label>
+                                    <div className="mt-1 relative rounded-md shadow-sm">
+                                        <input
+                                            id="lastName"
+                                            name="lastName"
+                                            placeholder="Last Name"
+                                            type="text"
+                                            value={lastName}
+                                            onChange={(e) => setLastName(e.target.value)}
+                                            required=""
+                                            className={`appearance-none block w-full px-3 py-2 border ${lastName !== null ? 'border-gray-300' : 'border-red-600'} rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mb-4">
-                                {/*User Email*/}
-                                <input
-                                    id="email"
-                                    type="email"
-                                    placeholder="Email"
-                                    className={`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border  placeholder-gray-500 text-sm focus:outline-none ${
-                                        email !== null
-                                            ? "border-gray-200 focus:border-indigo-600 focus:shadow-xl focus:shadow-indigo-500/10"
-                                            : "border-red-600 focus:shadow-xl shadow-red-500/10"
-                                    } focus:bg-white`}
-                                    onChange={(e) => {
-                                        setEmail(e.target.value);
-                                    }}
-                                    value={email}
-                                />
-                            </div>
-                            <div className="mb-4 md:flex md:justify-between">
-                                <div className="mb-4 md:mr-2 md:mb-0">
-                                    {/*User Password*/}
-                                    <input
-                                        id="password"
-                                        type="password"
-                                        placeholder="Password"
-                                        className={`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border  placeholder-gray-500 text-sm focus:outline-none ${
-                                            password !== null
-                                                ? "border-gray-200 focus:border-indigo-600 focus:shadow-xl focus:shadow-indigo-500/10"
-                                                : "border-red-600 focus:shadow-xl shadow-red-500/10"
-                                        } focus:bg-white`}
-                                        onChange={(e) => {
-                                            setPassword(e.target.value);
-                                        }}
-                                        value={password}
-                                    />
+                                <div className="mt-6">
+                                    <label
+                                        htmlFor="email"
+                                        className="block text-sm font-medium leading-5 text-gray-700"
+                                    >
+                                        Email address
+                                    </label>
+                                    <div className="mt-1 relative rounded-md shadow-sm">
+                                        <input
+                                            id="email"
+                                            name="email"
+                                            placeholder="user@example.com"
+                                            type="email"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                            required=""
+                                            className={`appearance-none block w-full px-3 py-2 border ${email !== null ? 'border-gray-300' : 'border-red-600'} rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
+                                        />
+                                    </div>
                                 </div>
-
-                                <div className="md:ml-2">
-                                    {/*Confirm Password*/}
-                                    <input
-                                        id="c_password"
-                                        type="password"
-                                        placeholder="Confirm Password"
-                                        className={`w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border  placeholder-gray-500 text-sm focus:outline-none ${
-                                            c_password !== null
-                                                ? "border-gray-200 focus:border-indigo-600 focus:shadow-xl focus:shadow-indigo-500/10"
-                                                : "border-red-600 focus:shadow-xl shadow-red-500/10"
-                                        } focus:bg-white`}
-                                        onChange={(e) => {
-                                            setC_Password(e.target.value);
-                                        }}
-                                        value={c_password}
-                                    />
+                                <div className="mt-6">
+                                    <label
+                                        htmlFor="password"
+                                        className="block text-sm font-medium leading-5 text-gray-700"
+                                    >
+                                        Password
+                                    </label>
+                                    <div className="mt-1 relative rounded-md shadow-sm">
+                                        <input
+                                            id="password"
+                                            name="password"
+                                            placeholder="Password"
+                                            type="password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            required=""
+                                            className={`appearance-none block w-full px-3 py-2 border ${password !== null ? 'border-gray-300' : 'border-red-600'} rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="mb-6 text-center">
-                                {/*Register Button*/}
+                                <div className="mt-6">
+                                    <label
+                                        htmlFor="c_password"
+                                        className="block text-sm font-medium leading-5 text-gray-700"
+                                    >
+                                        Confirm Password
+                                    </label>
+                                    <div className="mt-1 relative rounded-md shadow-sm">
+                                        <input
+                                            id="c_password"
+                                            name="c_password"
+                                            placeholder="Confirm Password"
+                                            type="password"
+                                            value={c_password}
+                                            onChange={(e) => setC_Password(e.target.value)}
+                                            required=""
+                                            className={`appearance-none block w-full px-3 py-2 border ${c_password !== null ? 'border-gray-300' : 'border-red-600'} rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5`}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="mt-6">
+                                    <span className="block w-full rounded-md shadow-sm">
+                                        <button
+                                            type="submit"
+                                            onClick={(e) => handleRegistration(e)}
+                                            className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out"
+                                        >
+                                            Register Account
+                                        </button>
+                                    </span>
+                                </div>
                                 {userExist && (
-                                    <p className="text-red-500 text-xs italic">
+                                    <p className="mt-6 text-xs text-red-500 text-center">
                                         User already exists
                                     </p>
                                 )}
-                                <button
-                                    type="submit"
-                                    className="mt-5 tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                                    onClick={(e) => handleRegistration(e)}
-                                >
-                                    Register Account
-                                </button>
-                            </div>
-                            <hr className="mb-2 border-t" />
-
-                            <div className="text-center">
-                                <p className="mt-6 text-xs text-gray-600 text-center ">
+                                <p className="mt-6 text-xs text-gray-600 text-center">
                                     Already have an account?&nbsp;
                                     <NavLink
                                         to="/signin"
-                                        className=" font-bold text-blue-500 border-b border-gray-500 border-dotted"
+                                        className="font-bold text-blue-500 border-b border-gray-500 border-dotted"
                                     >
                                         Sign In
                                     </NavLink>
                                 </p>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
-        </>
+        </div>
     );
 }

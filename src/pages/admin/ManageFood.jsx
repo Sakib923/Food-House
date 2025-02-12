@@ -32,7 +32,7 @@ export default function ManageFood() {
                 setFoodName("");
                 setPrice("");
                 setAvailable(true);
-                setImage(null);
+                setImage("");
                 fetchFoods(); // Refresh the food list
             } else {
                 console.error("Failed to add food item");
@@ -143,6 +143,7 @@ export default function ManageFood() {
                                     name="foodName"
                                     placeholder="Food Name"
                                     type="text"
+                                    value={foodName}
                                     onChange={(e) => setFoodName(e.target.value)}
                                     required=""
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -164,6 +165,7 @@ export default function ManageFood() {
                                         name="price"
                                         placeholder="Price"
                                         type="number"
+                                        value={price}
                                         onChange={(e) => setPrice(e.target.value)}
                                         required=""
                                         className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
@@ -202,8 +204,9 @@ export default function ManageFood() {
                                 <input
                                     id="image"
                                     name="image"
-                                    type="file"
-                                    onChange={(e) => setImage(e.target.files[0])}
+                                    type="string"
+                                    value={image}
+                                    onChange={(e) => setImage(e.target.value)}
                                     required=""
                                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"
                                 />

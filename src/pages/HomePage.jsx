@@ -16,7 +16,10 @@ export default function HomePage() {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
+            
             setFoodItems(data);
+            // console.log(` in the fetchItems function ${data}`);
+            // console.log(data);
             (data);
         } catch (error) {
             console.error('Error fetching food items:', error);
@@ -56,6 +59,7 @@ export default function HomePage() {
           itemId={item.food_id}
           itemName={item.food_name}
           price={item.price}
+          image={item.food_image}
         />
       ))}
     </div>
